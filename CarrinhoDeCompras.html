@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Carrinho Compras</title>
+    <style>
+    body{background:#e8f5e8;color:#333;font-family:Arial,sans-serif}
+    h1{color:#2e7d32;text-align:center;font-size:2.4em}
+    .container{max-width:650px;margin:30px auto;padding:40px;background:#fff;border-radius:25px;box-shadow:0 12px 35px rgba(0,0,0,0.15)}
+    .form-section{background:#c8e6c9;padding:25px;border-radius:15px;margin-bottom:30px}
+    input{width:60%;padding:16px;font-size:18px;border:3px solid #a5d6a7;border-radius:12px}
+    .btn-section{text-align:center;margin:25px 0}
+    .btn-adicionar{padding:16px 35px;background:#4caf50;color:white;border:none;border-radius:12px;cursor:pointer;font-size:18px;font-weight:bold;margin:0 10px}
+    .btn-adicionar:hover{background:#43a047}
+    .btn-remover{padding:16px 35px;background:#f44336;color:white;border:none;border-radius:12px;cursor:pointer;font-size:18px;font-weight:bold;margin:0 10px}
+    .btn-remover:hover{background:#d32f2f}
+    .carrinho-vazio{text-align:center;color:#666;font-size:20px;padding:50px;background:#f1f8e9;border-radius:15px;margin-top:20px}
+    .carrinho-item{background:#e8f5e8;margin:15px 0;padding:25px;border-radius:15px;border-left:6px solid #4caf50;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+    .produto-info h3{margin:0;font-size:22px;color:#2e7d32}
+    .produto-preco{font-size:20px;font-weight:bold;color:#1b5e20}
+    .total-section{background:#c8e6c9;padding:25px;border-radius:15px;margin-top:30px;text-align:center}
+    .total-preco{font-size:28px;color:#1b5e20;font-weight:bold}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Carrinho de Compras</h1>
+        
+        <div class="form-section">
+            <input id="nomeProduto" placeholder="Nome do produto">
+            <input id="precoProduto" type="number" placeholder="Preço (R$)" step="0.01">
+            <div class="btn-section">
+                <button class="btn-adicionar" onclick="adicionarProduto()">➕ Adicionar</button>
+                <button class="btn-remover" onclick="removerUltimo()">🗑️ Remover Último</button>
+            </div>
+        </div>
+
+        <div id="listaCarrinho">
+            <div class="carrinho-vazio">Carrinho vazio! Adicione produtos...</div>
+        </div>
+
+        <div id="totalSection" class="total-section" style="display:none">
+            <h3>Total: <span id="totalPreco" class="total-preco">R$ 0,00</span></h3>
+        </div>
+    </div>
+
+    <script>
+    var carrinho = []
+
+    function adicionarProduto(){
+        var nome = document.getElementById("nomeProduto").value
+        var preco = Number(document.getElementById("precoProduto").value)
+        
+        if(nome!="" && preco>0){
+            carrinho.push({nome: nome, preco: preco})
+            document.getElementById("nomeProduto").value = ""
+            document.getElementById("precoProduto").value = ""
+            atualizarCarrinho()
+        }
+    }
+
+    function removerUltimo(){
+        if(carrinho.length > 0){
+            carrinho.pop()
+            atualizarCarrinho()
+        }
+    }
+
+    function atualizarCarrinho(){
+        var lista = document.getElementById("listaCarrinho")
+        
+        if(carrinho.length == 0){
+            lista.innerHTML = '<div class="carrinho-vazio">Carrinho vazio! Adicione produtos...</div>'
+            document.getElementById("totalSection").style.display = "none"
+            return
+        }
+        
+        var html = ""
+        var total = 0
+        
+        for(var i=0; i<carrinho.length; i++){
+            total += carrinho[i].preco
+            html += '<div class="carrinho-item">'
+            html += '<div class="produto-info">'
+            html += '<h3>' + carrinho[i].nome + '</h3>'
+            html += '</div>'
+            html += '<div class="produto-preco">R$ ' + carrinho[i].preco.toFixed(2) + '</div>'
+            html += '</div>'
+        }
+        
+        lista.innerHTML = html
+        document.getElementById("totalPreco").innerText = "R$ " + total.toFixed(2)
+        document.getElementById("totalSection").style.display = "block"
+    }
+    </script>
+</body>
+</html>

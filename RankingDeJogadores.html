@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ranking Jogadores</title>
+    <style>
+    body{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;font-family:Arial,sans-serif;min-height:100vh}
+    h1{color:#fff;text-align:center;font-size:3em;text-shadow:3px 3px 6px rgba(0,0,0,0.5);margin-bottom:20px}
+    .container{max-width:800px;margin:40px auto;padding:50px;background:rgba(255,255,255,0.15);border-radius:35px;backdrop-filter:blur(20px);box-shadow:0 25px 70px rgba(0,0,0,0.3)}
+    .form-section{background:rgba(255,255,255,0.2);padding:40px;border-radius:25px;margin-bottom:40px;backdrop-filter:blur(10px)}
+    .form-row{display:flex;gap:25px;align-items:center;justify-content:center;flex-wrap:wrap}
+    input{width:250px;padding:20px;font-size:18px;border:3px solid rgba(255,255,255,0.4);border-radius:20px;background:rgba(255,255,255,0.2);color:#fff;font-weight:bold}
+    input::placeholder{color:#ddd}
+    .btn-adicionar{padding:20px 45px;background:#ff6b6b;color:white;border:none;border-radius:20px;cursor:pointer;font-size:20px;font-weight:bold;box-shadow:0 8px 25px rgba(255,107,107,0.4)}
+    .btn-adicionar:hover{background:#ff5252;transform:translateY(-3px)}
+    .ranking-section{background:rgba(0,0,0,0.3);padding:40px;border-radius:25px}
+    .ranking-titulo{text-align:center;font-size:28px;margin-bottom:30px;color:#ffd700;text-shadow:2px 2px 4px rgba(0,0,0,0.5)}
+    .ranking-lista{list-style:none;padding:0}
+    .jogador-item{padding:25px;margin:15px 0;background:rgba(255,255,255,0.2);border-radius:20px;display:flex;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,0.2);transition:all 0.3s}
+    .jogador-item:hover{transform:translateX(15px);box-shadow:0 15px 40px rgba(0,0,0,0.3)}
+    .posicao{width:60px;height:60px;background:#ffd700;color:#1a1a2e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:bold;margin-right:25px;box-shadow:0 5px 20px rgba(255,215,0,0.5)}
+    .jogador-info{flex-grow:1}
+    .nome-jogador{font-size:24px;font-weight:bold;margin-bottom:5px}
+    .pontos{font-size:20px;color:#4caf50;font-weight:bold}
+    .vazio{text-align:center;font-size:24px;color:#b0bec5;padding:80px;background:rgba(255,255,255,0.1);border-radius:25px;margin-top:30px}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 Ranking de Jogadores</h1>
+        
+        <div class="form-section">
+            <div class="form-row">
+                <input id="nomeJogador" placeholder="Nome do jogador">
+                <input id="pontosJogador" type="number" placeholder="Pontos" min="0">
+                <button class="btn-adicionar" onclick="adicionarJogador()">➕ Adicionar</button>
+            </div>
+        </div>
+
+        <div class="ranking-section">
+            <h2 class="ranking-titulo">🏅 Ranking Atual</h2>
+            <ul id="listaRanking" class="ranking-lista">
+                <li class="vazio">Adicione jogadores para ver o ranking!</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+    var jogadores = []
+
+    function adicionarJogador(){
+        var nome = document.getElementById("nomeJogador").value.trim()
+        var pontos = Number(document.getElementById("pontosJogador").value)
+        
+        if(nome != "" && pontos >= 0){
+            jogadores.push({jogador: nome, pontos: pontos})
+            document.getElementById("nomeJogador").value = ""
+            document.getElementById("pontosJogador").value = ""
+            atualizarRanking()
+        }
+    }
+
+    function atualizarRanking(){
+        // Ordena por pontos (maior primeiro)
+        jogadores.sort(function(a, b){
+            return b.pontos - a.pontos
+        })
+        
+        // Usa map para adicionar posição
+        var ranking = jogadores.map(function(jogador, index){
+            return {
+                posicao: index + 1,
+                jogador: jogador.jogador,
+                pontos: jogador.pontos
+            }
+        })
+        
+        mostrarRanking(ranking)
+    }
+
+    function mostrarRanking(ranking){
+        var lista = document.getElementById("listaRanking")
+        
+        if(ranking.length == 0){
+            lista.innerHTML = '<li class="vazio">Adicione jogadores para ver o ranking!</li>'
+            return
+        }
+        
+        var html = ""
+        for(var i=0; i<ranking.length; i++){
+            var medalha = ""
+            if(ranking[i].posicao == 1) medalha = "🥇 "
+            else if(ranking[i].posicao == 2) medalha = "🥈 "
+            else if(ranking[i].posicao == 3) medalha = "🥉 "
+            
+            html += '<li class="jogador-item">'
+            html += '<div class="posicao">' + ranking[i].posicao + 'º</div>'
+            html += '<div class="jogador-info">'
+            html += '<div class="nome-jogador">' + medalha + ranking[i].jogador + '</div>'
+            html += '<div class="pontos">' + ranking[i].pontos + ' pontos</div>'
+            html += '</div>'
+            html += '</li>'
+        }
+        lista.innerHTML = html
+    }
+    </script>
+</body>
+</html>

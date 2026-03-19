@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Catalogo Filmes</title>
+    <style>
+    body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif}
+    h1{color:#ffd700;text-align:center;font-size:2.8em;text-shadow:2px 2px 4px rgba(0,0,0,0.5)}
+    .container{max-width:900px;margin:40px auto;padding:50px;background:#16213e;border-radius:30px;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+    .form-section{background:rgba(255,255,255,0.1);padding:35px;border-radius:25px;margin-bottom:40px;backdrop-filter:blur(10px)}
+    .form-row{display:flex;gap:20px;flex-wrap:wrap;align-items:end}
+    input,select{width:200px;padding:18px;font-size:16px;border:2px solid rgba(255,215,0,0.3);border-radius:15px;background:rgba(255,255,255,0.1);color:#fff}
+    input::placeholder{color:#ccc}
+    button{padding:18px 35px;background:#ffd700;color:#1a1a2e;border:none;border-radius:15px;cursor:pointer;font-size:18px;font-weight:bold;margin:10px}
+    button:hover{background:#ffed4e;transform:scale(1.05)}
+    .filtros{text-align:center;margin:30px 0}
+    .filme-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;margin-top:40px}
+    .filme-card{background:rgba(255,255,255,0.1);padding:35px;border-radius:25px;backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.2);transition:all 0.4s}
+    .filme-card:hover{transform:translateY(-10px);box-shadow:0 20px 40px rgba(0,0,0,0.4)}
+    .titulo-filme{font-size:26px;font-weight:bold;color:#ffd700;margin-bottom:15px;text-align:center}
+    .info-filme{font-size:18px;margin:8px 0;color:#b0bec5}
+    .genero{background:#ffd700;color:#1a1a2e;padding:8px 20px;border-radius:25px;font-weight:bold;display:inline-block;font-size:16px}
+    .sem-filmes{text-align:center;color:#b0bec5;font-size:22px;padding:80px;background:rgba(255,255,255,0.05);border-radius:25px;margin-top:40px}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Catálogo de Filmes</h1>
+        
+        <div class="form-section">
+            <div class="form-row">
+                <input id="tituloFilme" placeholder="Título do filme">
+                <input id="anoFilme" type="number" placeholder="Ano" min="1900" max="2025">
+                <select id="generoFilme">
+                    <option value="">Selecione gênero</option>
+                    <option value="Ação">Ação</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Comédia">Comédia</option>
+                    <option value="Terror">Terror</option>
+                    <option value="Romance">Romance</option>
+                </select>
+                <button onclick="adicionarFilme()">➕ Adicionar Filme</button>
+            </div>
+        </div>
+
+        <div class="filtros">
+            <button onclick="mostrarTodos()">👀 Todos os Filmes</button>
+            <button onclick="filtrarGenero('Ação')">⚔️ Ação</button>
+            <button onclick="filtrarGenero('Drama')">🎭 Drama</button>
+            <button onclick="filtrarGenero('Comédia')">😂 Comédia</button>
+            <button onclick="filtrarGenero('Terror')">👻 Terror</button>
+            <button onclick="filtrarGenero('Romance')">💕 Romance</option>
+        </div>
+
+        <div id="listaFilmes" class="filme-grid">
+            <div class="sem-filmes">Adicione filmes ou filtre por gênero!</div>
+        </div>
+    </div>
+
+    <script>
+    var filmes = []
+
+    function adicionarFilme(){
+        var titulo = document.getElementById("tituloFilme").value.trim()
+        var ano = document.getElementById("anoFilme").value
+        var genero = document.getElementById("generoFilme").value
+        
+        if(titulo != "" && ano != "" && genero != ""){
+            filmes.push({
+                titulo: titulo,
+                ano: ano,
+                genero: genero
+            })
+            limparFormulario()
+            mostrarTodos()
+        }
+    }
+
+    function limparFormulario(){
+        document.getElementById("tituloFilme").value = ""
+        document.getElementById("anoFilme").value = ""
+        document.getElementById("generoFilme").value = ""
+    }
+
+    function mostrarTodos(){
+        mostrarFilmes(filmes)
+    }
+
+    function filtrarGenero(genero){
+        var filtrados = filmes.filter(function(filme){
+            return filme.genero === genero
+        })
+        mostrarFilmes(filtrados)
+    }
+
+    function mostrarFilmes(lista){
+        var html = ""
+        if(lista.length == 0){
+            html = '<div class="sem-filmes">Nenhum filme encontrado!</div>'
+        } else {
+            for(var i=0; i<lista.length; i++){
+                html += '<div class="filme-card">'
+                html += '<div class="titulo-filme">' + lista[i].titulo + '</div>'
+                html += '<div class="info-filme">📅 Ano: ' + lista[i].ano + '</div>'
+                html += '<div class="info-filme">🎭 Gênero: <span class="genero">' + lista[i].genero + '</span></div>'
+                html += '</div>'
+            }
+        }
+        document.getElementById("listaFilmes").innerHTML = html
+    }
+    </script>
+</body>
+</html>

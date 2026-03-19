@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista Compras</title>
+    <style>
+    body{background:#f0f8ff;color:#333;font-family:Arial}
+    h1{color:#4169e1;text-align:center}
+    .container{max-width:500px;margin:20px auto;padding:20px;background:#fff;border-radius:10px;box-shadow:0 4px 8px rgba(0,0,0,0.1)}
+    input{width:70%;padding:10px;font-size:16px;border:2px solid #ddd;border-radius:5px}
+    button{padding:10px 20px;background:#4caf50;color:white;border:none;border-radius:5px;cursor:pointer;font-size:16px}
+    button:hover{background:#45a049}
+    ul{list-style:none;padding:0}
+    li{background:#f9f9f9;margin:5px 0;padding:10px;border-radius:5px;display:flex;justify-content:space-between}
+    .delete{background:#f44336;padding:5px 10px;font-size:14px}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Compras</h1>
+        <input id="novoItem" placeholder="digite o item">
+        <button onclick="adicionar()">Adicionar</button>
+        <ul id="listaItens"></ul>
+    </div>
+
+    <script>
+    var lista = []
+
+    function adicionar(){
+        var item = document.getElementById("novoItem").value
+        if(item!=""){
+            lista.push(item)
+            document.getElementById("novoItem").value = ""
+            mostrarLista()
+        }
+    }
+
+    function mostrarLista(){
+        var ul = document.getElementById("listaItens")
+        ul.innerHTML = ""
+        for(var i=0; i<lista.length; i++){
+            var li = document.createElement("li")
+            li.innerHTML = lista[i]
+            
+            var btn = document.createElement("button")
+            btn.innerText = "Remover"
+            btn.className = "delete"
+            btn.onclick = function(){
+                var index = lista.indexOf(this.parentNode.firstChild.textContent)
+                lista.splice(index,1)
+                mostrarLista()
+            }
+            li.appendChild(btn)
+            ul.appendChild(li)
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerenciador Alunos</title>
+    <style>
+    body{background:#e3f2fd;color:#333;font-family:Arial}
+    h1{color:#1976d2;text-align:center}
+    .container{max-width:600px;margin:20px auto;padding:25px;background:#fff;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
+    .form-group{margin:15px 0}
+    input,select{width:45%;padding:12px;font-size:16px;border:2px solid #ddd;border-radius:8px}
+    button{padding:12px 25px;background:#2196f3;color:white;border:none;border-radius:8px;cursor:pointer;font-size:16px;margin:5px}
+    button:hover{background:#1976d2}
+    .aprovados{background:#4caf50;color:white;padding:15px;border-radius:10px;margin:20px 0}
+    .aluno-item{background:#f5f5f5;margin:10px 0;padding:15px;border-radius:8px;border-left:4px solid #ddd}
+    .aprovado{border-left-color:#4caf50 !important}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Gerenciador de Alunos</h1>
+        
+        <div class="form-group">
+            <input id="nomeAluno" placeholder="Nome do aluno">
+            <input id="notaAluno" type="number" placeholder="Nota (0-10)" max="10">
+            <button onclick="adicionarAluno()">Adicionar Aluno</button>
+        </div>
+
+        <button onclick="mostrarTodos()">Mostrar Todos</button>
+        <button onclick="mostrarAprovados()">Apenas Aprovados (>=7)</button>
+
+        <div id="resultado"></div>
+    </div>
+
+    <script>
+    var alunos = []
+
+    function adicionarAluno(){
+        var nome = document.getElementById("nomeAluno").value
+        var nota = Number(document.getElementById("notaAluno").value)
+        
+        if(nome!="" && nota>=0 && nota<=10){
+            alunos.push({nome: nome, nota: nota})
+            document.getElementById("nomeAluno").value = ""
+            document.getElementById("notaAluno").value = ""
+            alert("Aluno adicionado!")
+        }
+    }
+
+    function mostrarTodos(){
+        var html = "<h3>Todos os Alunos (" + alunos.length + ")</h3>"
+        for(var i=0; i<alunos.length; i++){
+            html += '<div class="aluno-item ' + (alunos[i].nota>=7 ? "aprovado" : "") + '">'
+            html += "<strong>" + alunos[i].nome + "</strong> - Nota: " + alunos[i].nota
+            html += "</div>"
+        }
+        document.getElementById("resultado").innerHTML = html
+    }
+
+    function mostrarAprovados(){
+        var aprovados = alunos.filter(function(aluno){
+            return aluno.nota >= 7
+        })
+        
+        var html = '<div class="aprovados"><h3>Aprovados (' + aprovados.length + ")</h3></div>"
+        for(var i=0; i<aprovados.length; i++){
+            html += '<div class="aluno-item aprovado">'
+            html += "<strong>" + aprovados[i].nome + "</strong> - Nota: " + aprovados[i].nota
+            html += "</div>"
+        }
+        document.getElementById("resultado").innerHTML = html
+    }
+    </script>
+</body>
+</html>

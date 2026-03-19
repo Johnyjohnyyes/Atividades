@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista Tarefas LocalStorage</title>
+    <style>
+    body{background:#fff8e1;color:#333;font-family:Arial,sans-serif}
+    h1{color:#f57c00;text-align:center;font-size:2.5em;margin-bottom:20px}
+    .container{max-width:600px;margin:40px auto;padding:40px;background:#fff;border-radius:25px;box-shadow:0 15px 45px rgba(0,0,0,0.2)}
+    .input-group{position:relative;margin:30px 0}
+    input{width:70%;padding:20px;font-size:18px;border:3px solid #ffe0b2;border-radius:15px 0 0 15px}
+    .btn-add{position:absolute;right:5px;top:5px;padding:20px 30px;background:#ff9800;color:white;border:none;border-radius:0 15px 15px 0;cursor:pointer;font-size:18px;font-weight:bold}
+    .btn-add:hover{background:#f57c00}
+    .tarefas-lista{margin-top:30px}
+    .tarefa-item{background:#fff3e0;margin:15px 0;padding:25px;border-radius:20px;border-left:6px solid #ff9800;display:flex;justify-content:space-between;align-items:center;box-shadow:0 5px 20px rgba(0,0,0,0.1);transition:all 0.3s}
+    .tarefa-item:hover{transform:translateX(10px)}
+    .tarefa-texto{font-size:20px;font-weight:500}
+    .btn-delete{background:#f44336;color:white;border:none;border-radius:50%;width:45px;height:45px;cursor:pointer;font-size:18px;font-weight:bold;margin-left:15px}
+    .btn-delete:hover{background:#d32f2f}
+    .status-salvo{color:#4caf50;font-size:18px;text-align:center;margin-top:25px;padding:15px;background:#e8f5e8;border-radius:15px;font-weight:bold}
+    .vazio{text-align:center;color:#999;font-size:22px;padding:60px;background:#fafafa;border-radius:20px;margin-top:30px}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Lista de Tarefas</h1>
+        <p style="text-align:center;color:#666;font-size:16px">As tarefas ficam salvas no navegador! 🔄</p>
+        
+        <div class="input-group">
+            <input id="novaTarefa" placeholder="Digite sua nova tarefa..." onkeypress="if(event.keyCode==13) adicionarTarefa()">
+            <button class="btn-add" onclick="adicionarTarefa()">➕</button>
+        </div>
+
+        <div id="listaTarefas" class="tarefas-lista">
+            <div class="vazio">Nenhuma tarefa ainda... Adicione a primeira!</div>
+        </div>
+
+        <div id="status" class="status-salvo" style="display:none">💾 Todas as tarefas salvas!</div>
+    </div>
+
+    <script>
+    var tarefas = []
+
+    // Carrega tarefas do LocalStorage quando abre a página
+    function carregarTarefas(){
+        var salvo = localStorage.getItem("minhasTarefas")
+        if(salvo){
+            tarefas = JSON.parse(salvo)
+            mostrarTarefas()
+        }
+    }
+
+    function adicionarTarefa(){
+        var texto = document.getElementById("novaTarefa").value.trim()
+        if(texto != ""){
+            tarefas.push(texto)
+            document.getElementById("novaTarefa").value = ""
+            salvarTarefas()
+            mostrarTarefas()
+        }
+    }
+
+    function removerTarefa(index){
+        tarefas.splice(index, 1)
+        salvarTarefas()
+        mostrarTarefas()
+    }
+
+    function salvarTarefas(){
+        localStorage.setItem("minhasTarefas", JSON.stringify(tarefas))
+        document.getElementById("status").style.display = "block"
+        setTimeout(function(){document.getElementById("status").style.display = "none"}, 2000)
+    }
+
+    function mostrarTarefas(){
+        var lista = document.getElementById("listaTarefas")
+        if(tarefas.length == 0){
+            lista.innerHTML = '<div class="vazio">Nenhuma tarefa ainda... Adicione a primeira!</div>'
+            return
+        }
+        
+        var html = ""
+        for(var i=0; i<tarefas.length; i++){
+            html += '<div class="tarefa-item">'
+            html += '<span class="tarefa-texto">' + tarefas[i] + '</span>'
+            html += '<button class="btn-delete" onclick="removerTarefa(' + i + ')">×</button>'
+            html += '</div>'
+        }
+        lista.innerHTML = html
+    }
+
+    // Carrega tarefas quando a página abre
+    carregarTarefas()
+    </script>
+</body>
+</html>

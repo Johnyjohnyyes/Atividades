@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista Tarefas Editar</title>
+    <style>
+    body{background:#e1f5fe;color:#333;font-family:Arial,sans-serif}
+    h1{color:#0277bd;text-align:center;font-size:2.6em;margin-bottom:20px}
+    .container{max-width:650px;margin:40px auto;padding:45px;background:#fff;border-radius:30px;box-shadow:0 15px 50px rgba(0,0,0,0.2)}
+    .input-section{background:#e3f2fd;padding:30px;border-radius:20px;margin-bottom:35px}
+    input{width:70%;padding:20px;font-size:18px;border:3px solid #b3e5fc;border-radius:15px 0 0 15px}
+    .btn-add{position:absolute;right:8px;top:8px;padding:20px 35px;background:#03a9f4;color:white;border:none;border-radius:0 15px 15px 0;cursor:pointer;font-size:18px;font-weight:bold}
+    .btn-add:hover{background:#0288d1}
+    .tarefa-item{background:#f5f5f5;margin:18px 0;padding:25px;border-radius:20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 6px 20px rgba(0,0,0,0.1);transition:all 0.3s}
+    .tarefa-item:hover{transform:translateX(8px);box-shadow:0 8px 25px rgba(0,0,0,0.15)}
+    .tarefa-texto{font-size:20px;font-weight:500;flex-grow:1;margin-right:15px}
+    .btn-edit{background:#ff9800;color:white;border:none;border-radius:12px;padding:12px 20px;cursor:pointer;font-size:16px;font-weight:bold;margin-right:10px}
+    .btn-edit:hover{background:#f57c00}
+    .btn-delete{background:#f44336;color:white;border:none;border-radius:12px;padding:12px 20px;cursor:pointer;font-size:16px;font-weight:bold}
+    .btn-delete:hover{background:#d32f2f}
+    .editando .tarefa-texto{border:2px solid #ff9800;background:#fff3e0;padding:12px;border-radius:10px}
+    .input-edit{width:100%;padding:12px;font-size:18px;border:2px solid #ff9800;border-radius:10px;font-family:Arial}
+    .vazio{text-align:center;color:#666;font-size:22px;padding:70px;background:#e3f2fd;border-radius:25px;margin-top:30px}
+    .salvando{background:#4caf50;color:white;padding:15px 25px;border-radius:12px;font-size:16px;display:inline-block;margin-top:20px}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✏️ Lista de Tarefas - Editar</h1>
+        
+        <div class="input-section">
+            <div style="position:relative">
+                <input id="novaTarefa" placeholder="Digite uma nova tarefa..." onkeypress="if(event.keyCode==13) adicionarTarefa()">
+                <button class="btn-add" onclick="adicionarTarefa()">➕ Adicionar</button>
+            </div>
+        </div>
+
+        <div id="listaTarefas">
+            <div class="vazio">Adicione tarefas para começar a editar!</div>
+        </div>
+    </div>
+
+    <script>
+    var tarefas = []
+    var editandoIndex = -1
+
+    function adicionarTarefa(){
+        var texto = document.getElementById("novaTarefa").value.trim()
+        if(texto != ""){
+            if(editandoIndex >= 0){
+                // Editar tarefa existente
+                tarefas.splice(editandoIndex, 1, texto)
+                editandoIndex = -1
+            } else {
+                // Adicionar nova tarefa
+                tarefas.push(texto)
+            }
+            document.getElementById("novaTarefa").value = ""
+            mostrarTarefas()
+        }
+    }
+
+    function editarTarefa(index){
+        editandoIndex = index
+        document.getElementById("novaTarefa").value = tarefas[index]
+        document.getElementById("novaTarefa").focus()
+    }
+
+    function removerTarefa(index){
+        tarefas.splice(index, 1)
+        mostrarTarefas()
+    }
+
+    function mostrarTarefas(){
+        var lista = document.getElementById("listaTarefas")
+        if(tarefas.length == 0){
+            lista.innerHTML = '<div class="vazio">Adicione tarefas para começar a editar!</div>'
+            return
+        }
+        
+        var html = ""
+        for(var i=0; i<tarefas.length; i++){
+            html += '<div class="tarefa-item">'
+            html += '<span class="tarefa-texto">' + tarefas[i] + '</span>'
+            html += '<div>'
+            html += '<button class="btn-edit" onclick="editarTarefa(' + i + ')">Editar</button>'
+            html += '<button class="btn-delete" onclick="removerTarefa(' + i + ')">Deletar</button>'
+            html += '</div>'
+            html += '</div>'
+        }
+        lista.innerHTML = html
+    }
+
+    // Enter no input salva edição
+    document.addEventListener("DOMContentLoaded", function(){
+        document.getElementById("novaTarefa").addEventListener("keypress", function(e){
+            if(e.keyCode == 13){
+                adicionarTarefa()
+            }
+        })
+    })
+    </script>
+</body>
+</html>

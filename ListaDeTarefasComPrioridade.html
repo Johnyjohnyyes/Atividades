@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista Tarefas Prioridade</title>
+    <style>
+    body{background:#fff3e0;color:#333;font-family:Arial}
+    h1{color:#ef6c00;text-align:center;font-size:2.2em}
+    .container{max-width:550px;margin:25px auto;padding:30px;background:#fff;border-radius:20px;box-shadow:0 8px 25px rgba(0,0,0,0.15)}
+    .form-row{display:flex;gap:15px;margin:20px 0;align-items:end}
+    input{width:60%;padding:14px;font-size:16px;border:2px solid #ffe0b2;border-radius:10px}
+    select{width:25%;padding:14px;font-size:16px;border:2px solid #ffe0b2;border-radius:10px}
+    button{padding:14px 28px;background:#ff9800;color:white;border:none;border-radius:10px;cursor:pointer;font-size:16px;font-weight:bold}
+    button:hover{background:#f57c00;transform:translateY(-2px)}
+    .tarefa-item{background:#fff8e1;margin:12px 0;padding:18px;border-radius:12px;border-left:5px solid #ff9800;box-shadow:0 3px 10px rgba(0,0,0,0.1)}
+    .alta{border-left-color:#d32f2f !important;background:#ffebee !important}
+    .alta .titulo{font-weight:bold;color:#c62828}
+    .prioridade-tag{padding:4px 12px;border-radius:20px;font-size:14px;font-weight:bold;margin-left:10px}
+    .alta .prioridade-tag{background:#ffcdd2;color:#c62828}
+    .normal .prioridade-tag{background:#e0f2f1;color:#00796b}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Lista de Tarefas com Prioridade</h1>
+        
+        <div class="form-row">
+            <input id="tituloTarefa" placeholder="Digite a tarefa">
+            <select id="prioridade">
+                <option value="normal">Normal</option>
+                <option value="alta">Alta</option>
+            </select>
+            <button onclick="adicionarTarefa()">➕ Adicionar</button>
+        </div>
+
+        <div id="listaTarefas">
+            <p style="text-align:center;color:#999">Nenhuma tarefa ainda...</p>
+        </div>
+    </div>
+
+    <script>
+    var tarefas = []
+
+    function adicionarTarefa(){
+        var titulo = document.getElementById("tituloTarefa").value
+        var prio = document.getElementById("prioridade").value
+        
+        if(titulo.trim() != ""){
+            var novaTarefa = {titulo: titulo, prioridade: prio}
+            
+            if(prio == "alta"){
+                tarefas.unshift(novaTarefa)
+            } else {
+                tarefas.push(novaTarefa)
+            }
+            
+            document.getElementById("tituloTarefa").value = ""
+            mostrarTarefas()
+        }
+    }
+
+    function mostrarTarefas(){
+        var lista = document.getElementById("listaTarefas")
+        if(tarefas.length == 0){
+            lista.innerHTML = '<p style="text-align:center;color:#999">Nenhuma tarefa ainda...</p>'
+            return
+        }
+        
+        var html = ""
+        for(var i=0; i<tarefas.length; i++){
+            var classe = tarefas[i].prioridade == "alta" ? "alta" : "normal"
+            html += '<div class="tarefa-item ' + classe + '">'
+            html += '<span class="titulo">' + tarefas[i].titulo + '</span>'
+            html += '<span class="prioridade-tag">' + tarefas[i].prioridade + '</span>'
+            html += '</div>'
+        }
+        lista.innerHTML = html
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Filtro Usuarios</title>
+    <style>
+    body{background:#fce4ec;color:#333;font-family:Arial,sans-serif}
+    h1{color:#c2185b;text-align:center;font-size:2.5em;margin-bottom:15px}
+    .container{max-width:700px;margin:35px auto;padding:40px;background:#fff;border-radius:25px;box-shadow:0 12px 40px rgba(0,0,0,0.15)}
+    .btn-group{text-align:center;margin:35px 0}
+    button{padding:18px 40px;background:#e91e63;color:white;border:none;border-radius:15px;cursor:pointer;font-size:18px;font-weight:bold;margin:0 15px;transition:all 0.3s}
+    .btn-todos:hover{background:#ad1457;transform:translateY(-3px)}
+    .btn-maiores:hover{background:#ad1457;transform:translateY(-3px)}
+    .usuarios-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px;margin-top:30px}
+    .usuario-card{padding:30px;border-radius:20px;text-align:center;box-shadow:0 8px 25px rgba(0,0,0,0.12);transition:transform 0.3s}
+    .usuario-todos{background:#f8bbd9;border:3px solid #f8bbd9}
+    .usuario-maior{background:#c8e6c9;border:3px solid #4caf50}
+    .nome{font-size:26px;font-weight:bold;color:#880e4f;margin-bottom:12px}
+    .idade{font-size:22px;color:#d81b60;font-weight:bold}
+    .maior-idade .idade{color:#2e7d32}
+    .sem-resultado{text-align:center;color:#999;font-size:20px;padding:60px;background:#fafafa;border-radius:20px;margin-top:30px}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👥 Filtro de Usuários</h1>
+        
+        <div class="btn-group">
+            <button class="btn-todos" onclick="mostrarTodos()">👀 Mostrar Todos</button>
+            <button class="btn-maiores" onclick="mostrarMaiores()">🎓 Maiores de 18</button>
+        </div>
+
+        <div id="listaUsuarios">
+            <div class="sem-resultado">Clique em um botão para ver os usuários!</div>
+        </div>
+    </div>
+
+    <script>
+    var usuarios = [
+        {nome: "Ana Silva", idade: 25},
+        {nome: "João Santos", idade: 17},
+        {nome: "Maria Oliveira", idade: 32},
+        {nome: "Pedro Costa", idade: 15},
+        {nome: "Carla Lima", idade: 28},
+        {nome: "Lucas Pereira", idade: 20},
+        {nome: "Julia Souza", idade: 16}
+    ]
+
+    function mostrarTodos(){
+        var html = '<div class="usuarios-grid">'
+        for(var i=0; i<usuarios.length; i++){
+            html += criarCard(usuarios[i], false)
+        }
+        html += '</div>'
+        document.getElementById("listaUsuarios").innerHTML = html
+    }
+
+    function mostrarMaiores(){
+        var maiores = usuarios.filter(function(usuario){
+            return usuario.idade >= 18
+        })
+        
+        var html = '<div class="usuarios-grid">'
+        if(maiores.length == 0){
+            html += '<div class="sem-resultado">Nenhum usuário maior de 18 anos!</div>'
+        } else {
+            for(var i=0; i<maiores.length; i++){
+                html += criarCard(maiores[i], true)
+            }
+        }
+        html += '</div>'
+        document.getElementById("listaUsuarios").innerHTML = html
+    }
+
+    function criarCard(usuario, maior){
+        return '<div class="usuario-card ' + (maior ? "usuario-maior" : "usuario-todos") + '">'
+             + '<div class="nome">' + usuario.nome + '</div>'
+             + '<div class="idade">' + usuario.idade + ' anos</div>'
+             + '</div>'
+    }
+    </script>
+</body>
+</html>
